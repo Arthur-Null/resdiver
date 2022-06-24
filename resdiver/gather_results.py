@@ -51,19 +51,19 @@ def get_mean_std(df: pd.DataFrame) -> pd.DataFrame:
 
 
 @click.command()
-@click.option("-s", "--seed", help="whether to save the mean/std after merge across seeds", type=bool, default=True)
-@click.option("-r", "--raw", help="whether to save the raw results before merge across seeds", type=bool, default=True)
+@click.option("--seed/--no-seed", help="whether to save the mean/std after merging across seeds", default=True)
+@click.option("--raw/--no-raw", help="whether to save the raw results without merging across seeds", default=True)
 @click.option(
     "-m",
-    "--map",
+    "--mapping",
     help="the path to the file containing the mapping rules",
-    type=click.Path(exists=True),
+    type=click.Path(exists=True, path_type=Path),
     default=Path(__file__).parents[1] / "maps/default.yml",
 )
-@click.argument("path", type=click.Path(exists=True))
-def gather_results(seed, raw, path, map):
+@click.argument("path", type=click.Path(exists=True, path_type=Path))
+def gather_results(seed, raw, path, mapping):
     all_results = get_all_configs_and_results(path)
-    all_results = map(all_results, map)
+    all_results = map(all_results, mapping)
     if seed:
         get_mean_std(all_results).to_csv(path / "results.csv", index=False)
     if raw:
