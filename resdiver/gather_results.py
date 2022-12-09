@@ -36,7 +36,7 @@ def map(df: pd.DataFrame, map_file: Path):
 
 
 def get_mean_std(df: pd.DataFrame) -> pd.DataFrame:
-    if not "runtime/seed" in df.columns:
+    if "runtime/seed" not in df.columns:
         logging.warning("No Different Seeds, std is not calculated")
     else:
         df.drop(columns=["runtime/seed"], inplace=True)
@@ -55,6 +55,7 @@ def get_mean_std(df: pd.DataFrame) -> pd.DataFrame:
 @click.command()
 @click.option("--seed/--no-seed", help="whether to save the mean/std after merging across seeds", default=True)
 @click.option("--raw/--no-raw", help="whether to save the raw results without merging across seeds", default=True)
+@click.option("--xlsx/--no-xlsx", help="whether to save the results in xlsx format", default=True)
 @click.option(
     "-m",
     "--mapping",
@@ -63,13 +64,18 @@ def get_mean_std(df: pd.DataFrame) -> pd.DataFrame:
     default=Path(__file__).parents[1] / "maps/default.yml",
 )
 @click.argument("path", type=click.Path(exists=True, path_type=Path))
-def gather_results(seed, raw, path, mapping):
+def gather_results(seed, raw, path, mapping, xlsx):
     all_results = get_all_configs_and_results(path)
     all_results = map(all_results, mapping)
     if seed:
-        get_mean_std(all_results).to_csv(path / "results.csv", index=False)
+        merge_results = get_mean_std(all_results)
+        merge_results.to_csv(path / "results.csv", index=False)
+        if xlsx:
+            merge_results.to_excel(path / "results.xlsx", index=False)
     if raw:
         all_results.to_csv(path / "raw_results.csv", index=False)
+        if xlsx:
+            all_results.to_excel(path / "raw_results.xlsx", index=False)
     return
 
 
