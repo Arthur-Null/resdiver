@@ -2,11 +2,10 @@ import json
 from pathlib import Path
 
 import click
-from datasets.utils.py_utils import flatten_nest_dict
 import pandas as pd
 import yaml
 
-from .utils import map_value
+from .utils import map_value, flatten_nest_dict
 
 
 def get_all_configs_and_results(root_dir: Path):
