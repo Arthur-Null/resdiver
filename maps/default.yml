@@ -1,10 +1,2 @@
-redundancy:
-  - data/window
-  - data/train_ratio
-  - data/test_ratio
-map:
-  data/file:
-    data/LSTNet_ts/electricity/electricity.txt: electricity
-    data/LSTNet_ts/solar-energy/solar_AL.txt: solar
-    data/LSTNet_ts/metr-la.h5: metr-la
-    data/LSTNet_ts/pems-bay.h5: pems-bay
+redundancy: []
+map: {}

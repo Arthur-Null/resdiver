@@ -4,6 +4,7 @@ from pathlib import Path
 import click
 import pandas as pd
 import yaml
+import logging
 
 from .utils import map_value, flatten_nest_dict
 
@@ -35,10 +36,12 @@ def map(df: pd.DataFrame, map_file: Path):
 
 
 def get_mean_std(df: pd.DataFrame) -> pd.DataFrame:
-    assert "runtime/seed" in df.columns, "No Different Seeds"
+    if not "runtime/seed" in df.columns:
+        logging.warning("No Different Seeds, std is not calculated")
+    else:
+        df.drop(columns=["runtime/seed"], inplace=True)
 
     para_list = [c for c in df.columns if not c.startswith("result") and c != "runtime/seed"]
-    df.drop(columns=["runtime/seed"], inplace=True)
     res = pd.concat(
         [
             df.groupby(para_list).mean().rename(lambda x: x + "_mean", axis=1),
