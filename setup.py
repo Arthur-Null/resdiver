@@ -26,6 +26,7 @@ setup(
         "pandas>=1.3.4",
         "Click",
         "pyyaml",
+        "openpyxl",
     ],
     entry_points={"console_scripts": ["gather_results = resdiver.gather_results:gather_results"]},
 )
