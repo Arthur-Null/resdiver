@@ -67,15 +67,15 @@ def get_mean_std(df: pd.DataFrame) -> pd.DataFrame:
 def gather_results(seed, raw, path, mapping, xlsx):
     all_results = get_all_configs_and_results(path)
     all_results = map(all_results, mapping)
+    if raw:
+        all_results.to_csv(path / "raw_results.csv", index=False)
+        if xlsx:
+            all_results.to_excel(path / "raw_results.xlsx", index=False)
     if seed:
         merge_results = get_mean_std(all_results)
         merge_results.to_csv(path / "results.csv", index=False)
         if xlsx:
             merge_results.to_excel(path / "results.xlsx", index=False)
-    if raw:
-        all_results.to_csv(path / "raw_results.csv", index=False)
-        if xlsx:
-            all_results.to_excel(path / "raw_results.xlsx", index=False)
     return
 
 
